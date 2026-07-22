@@ -6,6 +6,11 @@
     "outDir": "./dist",
     "esModuleInterop": true,
 
+    "baseUrl": "./src",
+    "paths": {
+      "@/*":["./"]
+    },
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
@@ -48,5 +53,6 @@
     "forceConsistentCasingInFileNames": true,
 
     "resolveJsonModule": true
-  }
+  },
+  "include": ["src/**/*"]
 }

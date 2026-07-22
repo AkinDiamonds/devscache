@@ -9,31 +9,46 @@ dotenv.config();
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(3000),
-  DATABASE_URL: z.string().url(),
-  JWT_SECRET: z.string().min(1),
-  JWT_EXPIRES_IN: z.string().default("1h")
+
+  // DB
+  DB_USER: z.string().min(1),
+  DB_PASSWORD: z.string().min(1),
+  DB_NAME: z.string().min(1),
+  DB_PORT: z.coerce.number().default(5432),
+
+  // Auth
+  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
+  JWT_EXPIRES_IN: z.string().default("1h"),
+  JWT_REFRESH_SECRET: z.string().min(32, "JWT_REFRESH_SECRET must be at least 32 characters"),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+
 })
 
 export type Env = z.infer<typeof envSchema>
 
 // Error handling for failed env variables
-let env: Env
+let _env: Env
 
 try {
-  env = envSchema.parse(process.env)
+  _env = envSchema.parse(process.env)
 } catch (error) {
   if (error instanceof z.ZodError){
-    console.error("Invalid Environment Variables:")
+    console.error("Invalid or missing env variables:")
     console.error(JSON.stringify(error.flatten().fieldErrors, null, 2))
     process.exit(1)
   }
   throw error
 }
 
+const env = {
+  ..._env,
+  DATABASE_URL: `postgresql://${_env.DB_USER}:${_env.DB_PASSWORD}@localhost:${_env.DB_PORT}/${_env.DB_NAME}`,
+};
+
 // Helpers to check current environment
-export const isProd = ()=>env.NODE_ENV === "production"
-export const isDev = ()=>env.NODE_ENV === "development"
-export const isTest = ()=>env.NODE_ENV === "test"
+export const isProd = ()=>env.NODE_ENV === "production";
+export const isDev = ()=>env.NODE_ENV === "development";
+export const isTest = ()=>env.NODE_ENV === "test";
 
 
 export { env }

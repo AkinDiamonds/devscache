@@ -1,6 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "imports": {
+    "#*": "./src/*"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -38,6 +41,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
     "@types/node": "^26.1.1",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.1",

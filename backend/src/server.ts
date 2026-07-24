@@ -1,7 +1,7 @@
-import { env } from "./config/env.js";
-import app from "./app.js";
-import { logger } from "shared/utils/logger.js";
-import { pool } from "config/db.js";
+import { env } from "#config/env.js";
+import app from "#app.js";
+import { logger } from "#shared/utils/logger.js";
+import { pool } from "#config/db.js";
 
 const port = env.PORT
 

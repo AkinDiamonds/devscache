@@ -5,10 +5,11 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan"
-import { generalLimiter } from "shared/middleware/rateLimiter.js";
-import { errorHandler } from "shared/middleware/errorHandler.js";
+import { generalLimiter } from "#shared/middleware/rateLimiter.js";
+import { errorHandler } from "#shared/middleware/errorHandler.js";
 
 // import feature routers (Please add new ones here as you build extra features)
+import { usersRouter } from "#features/users/index.js";
 
 const app = express()
 
@@ -32,8 +33,8 @@ app.get("/health", (_req, res) => {
 })
 
 // API routes: keep it versioned
-
-// add new feature routes here:
+app.use("/api/v1/users", usersRouter)
+// add new feature routes here in this form:
 // app.use("/api/v1/<feature-name>", <feature>Router);
 
 

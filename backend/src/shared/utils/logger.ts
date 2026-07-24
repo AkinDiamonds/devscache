@@ -1,4 +1,4 @@
-import { isDev } from "config/env.js";
+import { isDev } from "#config/env.js";
 import winston from "winston";
 
 

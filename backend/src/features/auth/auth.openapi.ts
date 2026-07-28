@@ -1,4 +1,4 @@
-import { registry } from "#config/swagger.js";
+import { registry } from "#config/openapi-registry.js";
 import { registerSchema, loginSchema, refreshSchema } from "./auth.schemas.js";
 
 // Register schema components in OpenAPI

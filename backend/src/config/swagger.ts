@@ -1,22 +1,7 @@
 import {
-  OpenAPIRegistry,
   OpenApiGeneratorV3,
-  extendZodWithOpenApi,
 } from "@asteasolutions/zod-to-openapi";
-import { z } from "zod";
-
-// Initialize Zod OpenAPI extension once globally
-extendZodWithOpenApi(z);
-
-export const registry = new OpenAPIRegistry();
-
-// Register standard security scheme (Bearer JWT Token)
-registry.registerComponent("securitySchemes", "bearerAuth", {
-  type: "http",
-  scheme: "bearer",
-  bearerFormat: "JWT",
-  description: "Enter your Bearer JWT access token to authenticate requests",
-});
+import { registry } from "./openapi-registry.js";
 
 // Import feature OpenAPI definitions to ensure paths are registered in registry
 import "#features/auth/auth.openapi.js";

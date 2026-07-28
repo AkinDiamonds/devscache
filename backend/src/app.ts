@@ -7,6 +7,7 @@ import cors from "cors";
 import morgan from "morgan"
 import { generalLimiter } from "#shared/middleware/rateLimiter.js";
 import { errorHandler } from "#shared/middleware/errorHandler.js";
+import { requireFrontendSecret } from "#shared/middleware/requireFrontendSecret.js";
 
 import swaggerUi from "swagger-ui-express";
 import { generateOpenAPIDocument } from "#config/swagger.js";
@@ -20,7 +21,10 @@ const app = express()
 
 // Security middlewares: pls leave as is in the same order
 app.use(helmet())
-app.use(cors())
+app.use(cors({
+  origin: env.CORS_ORIGINS,
+  allowedHeaders: ["Content-Type", "Authorization", "X-API-Secret"],
+}))
 
 // parsing middleware
 app.use(express.json({ limit: "10kb" })) // against large payload attacks
@@ -36,6 +40,9 @@ app.use(generalLimiter);
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString(), service: "devscache" })
 })
+
+// Shared frontend-only gate for the public API surface
+app.use(requireFrontendSecret)
 
 // Swagger API Documentation (Controlled by ENABLE_SWAGGER env flag)
 if (env.ENABLE_SWAGGER) {

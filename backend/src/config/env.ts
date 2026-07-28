@@ -9,6 +9,7 @@ dotenv.config();
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(3000),
+  CORS_ORIGINS: z.string().default("http://localhost:5173"),
 
   // DB
   DB_USER: z.string().min(1),
@@ -21,6 +22,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default("1h"),
   JWT_REFRESH_SECRET: z.string().min(32, "JWT_REFRESH_SECRET must be at least 32 characters"),
   JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+  FRONTEND_API_SECRET: z.string().default(""),
 
   // Swagger Documentation
   ENABLE_SWAGGER: z.preprocess((val) => {
@@ -30,10 +32,12 @@ const envSchema = z.object({
   }, z.boolean()).default(true),
 });
 
-export type Env = z.infer<typeof envSchema>
+export type Env = Omit<z.infer<typeof envSchema>, "CORS_ORIGINS"> & {
+  CORS_ORIGINS: string[];
+}
 
 // Error handling for failed env variables
-let _env: Env
+let _env: z.infer<typeof envSchema>
 
 try {
   _env = envSchema.parse(process.env)
@@ -48,8 +52,19 @@ try {
 
 const env = {
   ..._env,
+  CORS_ORIGINS: _env.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean),
   DATABASE_URL: `postgresql://${_env.DB_USER}:${_env.DB_PASSWORD}@localhost:${_env.DB_PORT}/${_env.DB_NAME}`,
 };
+
+if (_env.NODE_ENV === "production") {
+  if (_env.CORS_ORIGINS === "http://localhost:5173") {
+    throw new Error("CORS_ORIGINS must be set in production");
+  }
+
+  if (!_env.FRONTEND_API_SECRET) {
+    throw new Error("FRONTEND_API_SECRET must be set in production");
+  }
+}
 
 // Helpers to check current environment
 export const isProd = ()=>env.NODE_ENV === "production";

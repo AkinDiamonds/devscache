@@ -10,11 +10,12 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(3000),
   CORS_ORIGINS: z.string().default("http://localhost:5173"),
+  DATABASE_URL: z.string().min(1).optional(),
 
   // DB
-  DB_USER: z.string().min(1),
-  DB_PASSWORD: z.string().min(1),
-  DB_NAME: z.string().min(1),
+  DB_USER: z.string().min(1).optional(),
+  DB_PASSWORD: z.string().min(1).optional(),
+  DB_NAME: z.string().min(1).optional(),
   DB_PORT: z.coerce.number().default(5432),
 
   // Auth
@@ -50,10 +51,18 @@ try {
   throw error
 }
 
+if (!_env.DATABASE_URL) {
+  if (!_env.DB_USER || !_env.DB_PASSWORD || !_env.DB_NAME) {
+    throw new Error("Set DATABASE_URL or DB_USER, DB_PASSWORD, and DB_NAME");
+  }
+}
+
 const env = {
   ..._env,
   CORS_ORIGINS: _env.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean),
-  DATABASE_URL: `postgresql://${_env.DB_USER}:${_env.DB_PASSWORD}@localhost:${_env.DB_PORT}/${_env.DB_NAME}`,
+  DATABASE_URL:
+    _env.DATABASE_URL ??
+    `postgresql://${_env.DB_USER}:${_env.DB_PASSWORD}@localhost:${_env.DB_PORT}/${_env.DB_NAME}`,
 };
 
 if (_env.NODE_ENV === "production") {

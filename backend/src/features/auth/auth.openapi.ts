@@ -12,6 +12,7 @@ registry.registerPath({
   path: "/api/v1/auth/register",
   summary: "Register a new user account",
   tags: ["Auth"],
+  security: [{ apiSecretAuth: [] }],
   request: {
     body: {
       content: {
@@ -36,6 +37,7 @@ registry.registerPath({
   path: "/api/v1/auth/login",
   summary: "Authenticate user and get tokens",
   tags: ["Auth"],
+  security: [{ apiSecretAuth: [] }],
   request: {
     body: {
       content: {
@@ -60,6 +62,7 @@ registry.registerPath({
   path: "/api/v1/auth/refresh",
   summary: "Refresh access token",
   tags: ["Auth"],
+  security: [{ apiSecretAuth: [] }],
   request: {
     body: {
       content: {
@@ -84,6 +87,7 @@ registry.registerPath({
   path: "/api/v1/auth/logout",
   summary: "Logout user session",
   tags: ["Auth"],
+  security: [{ apiSecretAuth: [] }],
   request: {
     body: {
       content: {
@@ -105,7 +109,7 @@ registry.registerPath({
   path: "/api/v1/auth/logout-all",
   summary: "Revoke all refresh tokens for the current user",
   tags: ["Auth"],
-  security: [{ bearerAuth: [] }],
+  security: [{ apiSecretAuth: [], bearerAuth: [] }],
   responses: {
     200: {
       description: "All active sessions revoked",

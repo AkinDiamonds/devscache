@@ -41,9 +41,6 @@ app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString(), service: "devscache" })
 })
 
-// Shared frontend-only gate for the public API surface
-app.use(requireFrontendSecret)
-
 // Swagger API Documentation (Controlled by ENABLE_SWAGGER env flag)
 if (env.ENABLE_SWAGGER) {
   const swaggerDocument = generateOpenAPIDocument();
@@ -53,6 +50,9 @@ if (env.ENABLE_SWAGGER) {
     res.send(swaggerDocument);
   });
 }
+
+// Shared frontend-only gate for the public API surface
+app.use("/api/v1", requireFrontendSecret)
 
 // API routes: keep it versioned
 app.use("/api/v1/users", usersRouter)

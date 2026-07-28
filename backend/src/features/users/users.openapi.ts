@@ -11,7 +11,7 @@ registry.registerPath({
   path: "/api/v1/users/me",
   summary: "Get current authenticated user profile",
   tags: ["Users"],
-  security: [{ bearerAuth: [] }],
+  security: [{ apiSecretAuth: [], bearerAuth: [] }],
   responses: {
     200: {
       description: "Profile retrieved successfully",
@@ -27,7 +27,7 @@ registry.registerPath({
   path: "/api/v1/users/me",
   summary: "Update current authenticated user profile",
   tags: ["Users"],
-  security: [{ bearerAuth: [] }],
+  security: [{ apiSecretAuth: [], bearerAuth: [] }],
   request: {
     body: {
       content: {
@@ -55,7 +55,7 @@ registry.registerPath({
   path: "/api/v1/users/me",
   summary: "Delete current authenticated user account",
   tags: ["Users"],
-  security: [{ bearerAuth: [] }],
+  security: [{ apiSecretAuth: [], bearerAuth: [] }],
   responses: {
     200: {
       description: "Account deleted successfully",
@@ -71,7 +71,7 @@ registry.registerPath({
   path: "/api/v1/users/{id}",
   summary: "Get public user profile by ID",
   tags: ["Users"],
-  security: [{ bearerAuth: [] }],
+  security: [{ apiSecretAuth: [], bearerAuth: [] }],
   request: {
     params: getUserByIdSchema,
   },

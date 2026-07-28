@@ -1,6 +1,7 @@
 import {
   OpenApiGeneratorV3,
 } from "@asteasolutions/zod-to-openapi";
+import { env } from "#config/env.js";
 import { registry } from "./openapi-registry.js";
 
 // Import feature OpenAPI definitions to ensure paths are registered in registry
@@ -19,7 +20,7 @@ export function generateOpenAPIDocument() {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: `http://localhost:${env.PORT}`,
         description: "Local Development Server",
       },
     ],

@@ -15,3 +15,10 @@ registry.registerComponent("securitySchemes", "bearerAuth", {
   bearerFormat: "JWT",
   description: "Enter your Bearer JWT access token to authenticate requests",
 });
+
+registry.registerComponent("securitySchemes", "apiSecretAuth", {
+  type: "apiKey",
+  in: "header",
+  name: "X-API-Secret",
+  description: "Frontend API secret required for API requests",
+});
